@@ -1,21 +1,16 @@
-import Buttons from "../component/Buttons"
 import MortgageInput from "../component/MortgageInput"
 import Result from "../component/Result"
 
 const Card = () => {
   return (
-        <section className="mx-auto max-w-screen-lg bg-white rounded-3xl h-[60%]">
-        <div className="flex h-full">
+        <section className="mx-auto lg:max-w-screen-lg bg-white rounded-3xl h-[60%] max-lg:h-full">
+        <div className="flex max-lg:flex-col h-full">
             {/* left container */}
-            <div className="flex flex-col justify-between p-9 bg-white rounded-l-3xl max-w-full">
-                <div className="flex justify-between items-center h-auto">
-                    <h1 className="font-palanquin font-bold text-xl text-blue-950">Mortgage Calculator</h1>
-                    <a className="underline text-sm text-blue-900 font-montserrat" href="#">Clear All</a>
-                </div>
+            <div className="p-9 bg-white rounded-l-3xl max-w-full">
+                
                 <div>
-                <MortgageInput />
+                    <MortgageInput />
                 </div>
-                <Buttons />
             </div>
 
             {/* Right Container */}
