@@ -2,20 +2,39 @@ import Buttons from "../component/Buttons"
 
 import { useState, useEffect, useRef } from "react"
 
-const MortgageInput = () => {
-    const [result, setResult] = useState(null);
+const MortgageInput = ({setResult}) => {
+
+    const [amount, setAmount] = useState('')
+    const [amtactive, setAmtactive] = useState(false)
+    const amountRef = useRef(null)
+    const [years, setYears] = useState('')
+    const [yearsActive, setYearsActive] = useState(false)
+    const mrtRef = useRef(null)
+    const [interest, setInterest] = useState('')
+    const [interestActive, setInterestActive] = useState(false)
+    const intRef = useRef(null)
+    const [selectedOption, setSelectedOption] = useState(null)
+    
     const [error, setError] = useState({
         amount: '',
         years: '',
         interest: '',
         option: '',
     });
-    // const [errorStatus, setErrorStatus] = useState(false);
+    
+    const clearHandle = ()=>  {
+        setAmount('');
+        setAmtactive(false);
+        setYears('');
+        setYearsActive(false);
+        setInterest('');
+        setInterestActive(false);
+        setSelectedOption(null);
+        setError('');
+        setResult('');
+    }
 
     // for amount
-    const [amount, setAmount] = useState('')
-    const [amtactive, setAmtactive] = useState(false)
-    const amountRef = useRef(null)
     const amountFocus = () => {
         amountRef.current.focus();
         setAmtactive(true)
@@ -35,9 +54,6 @@ const MortgageInput = () => {
         };
     }, []); 
 
-    const [years, setYears] = useState('')
-    const [yearsActive, setYearsActive] = useState(false)
-    const mrtRef = useRef(null)
 
     const mrtFocus = () => {
         mrtRef.current.focus();
@@ -59,10 +75,6 @@ const MortgageInput = () => {
 
 
     // Interest rate
-    const [interest, setInterest] = useState('')
-    const [interestActive, setInterestActive] = useState(false)
-
-    const intRef = useRef(null)
 
     const intFocus = () => {
         intRef.current.focus();
@@ -78,9 +90,6 @@ const MortgageInput = () => {
 
 
     // radio section
-
-    const [selectedOption, setSelectedOption] = useState(null)
-
     const handleChange = (e) => {
         setSelectedOption(e.target.value);
     }
@@ -95,7 +104,7 @@ const MortgageInput = () => {
     };
 
     const calculateMortgage = (data) => {
-        let newErrors = {amount: '', years: '', interest: '',option: ''};
+        let newErrors = {amount: '', years: '', interest: '', option: ''};
         let hasError = false;
 
         const principal = parseFloat(data.amount);
@@ -103,12 +112,16 @@ const MortgageInput = () => {
         const annualInterest = parseFloat(data.interest); 
 
             if (data.amount.trim() === '') {
-                newErrors.amount = "Amount is empty";
+                newErrors.amount = "Amount is empty or zero";
                 hasError = true;
             } else if (isNaN(principal)) {
                 newErrors.amount = "Amount must be a number.";
                 hasError = true;
+            } else if (parseFloat(data.amount) === 0) {
+                newErrors.amount = "Amount must not be zero.";
+                hasError = true;
             }
+
             
             if (data.years.trim() === '') {
                 newErrors.years = "Years are required.";
@@ -116,14 +129,20 @@ const MortgageInput = () => {
             } else if (isNaN(termInYears)) {
                 newErrors.years = "Years must be a number.";
                 hasError = true;
+            } else if (parseFloat(data.years) === 0) {
+                newErrors.years = "Years must not be zero.";
+                hasError = true;
             }
 
             // Interest Validation
-            if (data.interest.trim() === '') {
+            if (data.interest.trim() === '' ) {
                 newErrors.interest = "Interest rate is required.";
                 hasError = true;
             } else if (isNaN(annualInterest)) {
                 newErrors.interest = "Interest rate must be a number.";
+                hasError = true;
+            } else if (parseFloat(data.interest) === 0) {
+                newErrors.interest = "Interest rate must not be zero.";
                 hasError = true;
             }
             
@@ -139,58 +158,77 @@ const MortgageInput = () => {
         const monthlyInterest = annualInterest / 100 /12;
         const numberOfPayments = termInYears * 12;
         let monthlyRepayment = 0;
+        let totalmonthlyRepayment = 0;
+        let output = {}
 
             
-        if (!isNaN(principal) && !isNaN(termInYears) && !isNaN(annualInterest) && data.amount.trim() !== '' && data.years.trim() !== '' && data.interest.trim() !== '' && data.option !== null) {
-            if (data.option == 'repayment') {
+        if (
+            !isNaN(principal) && 
+            !isNaN(termInYears) && 
+            !isNaN(annualInterest) && 
+            data.amount.trim() !== '' && 
+            data.years.trim() !== '' && 
+            data.interest.trim() !== '' && 
+            data.option !== null) {
+            if (data.option === 'repayment') {
                 monthlyRepayment = (principal * (monthlyInterest*Math.pow(1+monthlyInterest,numberOfPayments)/Math.pow(1+monthlyInterest,numberOfPayments-1)))
+                totalmonthlyRepayment = (principal + principal*(annualInterest / 100)*termInYears);
+                output = {
+                    "monthlyRepayment" : monthlyRepayment.toFixed(2),
+                    "totalmonthlyRepayment" : totalmonthlyRepayment.toFixed(2)}
             } else {
                 monthlyRepayment = (principal * (monthlyInterest/12))
+                output = {
+                    "monthlyRepayment" : monthlyRepayment.toFixed(2) 
+                }  
             }
-            setResult((monthlyRepayment + principal/numberOfPayments).toFixed(2));
+            setResult(output);
         }
     };
 
-    useEffect(() => {
-        setResult(result);
-    }, [result]); 
+    // useEffect(() => {
+    //     setResult(result);
+    // }, [result]); 
 
 
-    const clearHandle = ()=>  {
-        setAmount('');
-        setAmtactive(false);
-        setYears('');
-        setYearsActive(false);
-        setInterest('');
-        setInterestActive(false);
-        setSelectedOption(null);
-        setError('');
-    }
 
  
 
     // styles : mortgageamt
     const stylesma = [
-        { condition: error.amount, style: 'bg-red-500 border-red-500 shadow-lg' }, 
-        { condition: amtactive, style: 'bg-lime-400 border-lime-400 shadow-lg text-slate-600' },
+        { condition: error.amount, style: 'bg-red-200 border-red-500 shadow-lg' }, 
+        { condition: amtactive, style: 'bg-lime-200 border-lime-400 shadow-lg text-slate-600' },
         ];
 
     const borderMa = stylesma.find(item => item.condition)?.style || 'bg-sky-200 border-blue-900 text-slate-600';
 
     // styles : mortgage term 
     const stylesmrtamt = [
-        { condition: error.years, style: 'bg-red-500 border-red-500 shadow-lg' }, 
-        { condition : yearsActive, style : 'bg-lime-400 border-lime-400 shadow-lg text-slate-600'}
+        { condition: error.years, style: 'bg-red-200 border-red-500 shadow-lg' }, 
+        { condition : yearsActive, style : 'bg-lime-200 border-lime-400 shadow-lg text-slate-600'}
         ];
     const borderMrtTerm = stylesmrtamt.find(item => item.condition)?.style || 'bg-sky-200 border-blue-900 text-slate-600';
 
-
+    // styles : interest rate 
     const stylesintrate = [
-        { condition: error.interest, style: 'bg-red-500 border-red-500 shadow-lg' },
-        { condition : interestActive, style : 'bg-lime-400 border-lime-400 shadow-lg text-slate-600'}
+        { condition: error.interest, style: 'bg-red-200 border-red-500 shadow-lg' },
+        { condition : interestActive, style : 'bg-lime-200 border-lime-400 shadow-lg text-slate-600'}
         ];
     const borderINterestRte = stylesintrate.find(item => item.condition)?.style || 'bg-sky-200 border-blue-900 text-slate-600';
 
+    // styles : option repayment
+    const stylesOptRepayment = [
+        { condition: error.option, style: 'bg-red-200 border-red-500 shadow-lg' },
+        {condition: selectedOption === 'repayment', style : 'border-lime-400 bg-lime-100 shadow-lg'}
+    ];
+    const OptionStylesRepayment = stylesOptRepayment.find(item => item.condition)?.style || 'border-blue-900';
+
+    // styles : option interestonly
+    const stylesOptinterestonly = [
+        { condition: error.option, style: 'bg-red-200 border-red-500 shadow-lg' },
+        {condition: selectedOption === 'interest', style : 'border-lime-400 bg-lime-100 shadow-lg'}
+    ];
+    const OptionStylesinterestonly = stylesOptinterestonly.find(item => item.condition)?.style || 'border-blue-900';
 
   return (
     <section className="w-full flex flex-col space-y-5">
@@ -218,6 +256,7 @@ const MortgageInput = () => {
                 onChange={(e) => setAmount(e.target.value)}
             />
             </div>
+            {error.amount && <p className="text-xs mt-1 font-montserrat text-red-400">{error.amount}</p>}
         </div>
 
         {/* Mortgage Term and Interest Rate Section */}
@@ -239,6 +278,7 @@ const MortgageInput = () => {
                 <p className="text-slate-700 font-palanquin text-md">years</p>
                 </div>
             </div>
+            {error.years && <p className="text-xs mt-1 font-montserrat text-red-400">{error.years}</p>}
             </div>
 
             <div className="flex flex-col w-[45%] space-y-2">
@@ -258,34 +298,36 @@ const MortgageInput = () => {
                 <p className="text-center text-slate-700 font-palanquin text-md">%</p>
                 </div>
             </div>
+                {error.interest && <p className="text-xs mt-1 font-montserrat text-red-400">{error.interest}</p>}
             </div>
         </div>
 
         {/* Mortgage Type Section */}
         <div className="flex flex-col space-y-2">
             <p className="text-lg font-palanquin text-blue-950">Mortgage Type</p>
-            <div className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${selectedOption === 'repayment' ? 'border-lime-400 bg-lime-100 shadow-lg' : 'border-blue-900'} rounded-md`}>
+            <div className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${OptionStylesRepayment} rounded-md`}>
             <input
                 type="radio"
                 name="option"
                 value="repayment"
                 checked={selectedOption === 'repayment'}
                 onChange={handleChange}
-                className={`${selectedOption === 'repayment' ? 'border-lime-400' : ''} hover:cursor-pointer`}
+                className={`${OptionStylesRepayment} hover:cursor-pointer`}
             />
             <p className="text-sm font-semibold font-montserrat text-slate-700">Repayment</p>
             </div>
-            <div className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${selectedOption === 'interest' ? 'border-lime-400 bg-lime-100 shadow-lg' : 'border-blue-900'} rounded-md`}>
+            <div className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${OptionStylesinterestonly} rounded-md`}>
             <input
                 type="radio"
                 name="option"
                 value="interest"
                 checked={selectedOption === 'interest'}
                 onChange={handleChange}
-                className={`${selectedOption === 'interest' ? 'border-lime-400' : ''} hover:cursor-pointer`}
+                className={`${OptionStylesinterestonly} hover:cursor-pointer`}
             />
             <p className="text-sm font-semibold font-montserrat text-slate-700">Interest Only</p>
             </div>
+                {error.option && <p className="text-xs mt-1 font-montserrat text-red-400">{error.option}</p>}
         </div>
 
         {/* Button Section */}
@@ -293,7 +335,6 @@ const MortgageInput = () => {
             <Buttons inputValues={data} onClick={calculateMortgage}/>
         </div>
     </section>
-
   )
 }
 
