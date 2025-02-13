@@ -2,11 +2,11 @@ import Card from "./page/Card"
 
 const App = () => {
   return (
-    <main className="relative">
-      <section className="flex  sm:h-screen h-full w-screen items-center justify-around bg-sky-100">
-        <Card />
-      </section>
-    </main>
+  <main className="relative">
+    <section className="flex items-center justify-center min-h-screen w-screen bg-sky-100 p-4 sm:p-10">
+      <Card />
+    </section>
+  </main>
   );
 }
 

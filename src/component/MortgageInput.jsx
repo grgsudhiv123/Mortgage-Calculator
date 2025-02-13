@@ -231,110 +231,128 @@ const MortgageInput = ({setResult}) => {
     const OptionStylesinterestonly = stylesOptinterestonly.find(item => item.condition)?.style || 'border-blue-900';
 
   return (
-    <section className="w-full flex flex-col space-y-5">
-        {/* Header Section */}
-        <div className="flex justify-between items-center">
-            <h1 className="font-palanquin font-bold text-xl text-blue-950">Mortgage Calculator</h1>
-            <p className="underline text-sm text-blue-900 font-montserrat hover:cursor-pointer" onClick={clearHandle}>Clear All</p>
-        </div>
-
-        {/* Mortgage Amount Section */}
-        <div className="flex flex-col space-y-2">
-            <p className="text-lg font-palanquin text-blue-950">Mortgage Amount</p>
-            <div className={`flex flex-row justify-start items-center rounded-md border ${borderMa}`}>
-            <div className={`w-[10%] flex justify-center ${borderMa} h-full rounded-l-[5px]`}>
-                <p className="text-lg font-bold">£</p>
+        <section className="w-full flex flex-col space-y-5 p-4 md:p-8">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-2 md:space-y-0">
+                <h1 className="font-palanquin font-bold text-lg md:text-xl text-blue-950">Mortgage Calculator</h1>
+                <p
+                    className="underline text-sm text-blue-900 font-montserrat hover:cursor-pointer"
+                    onClick={clearHandle}
+                >
+                    Clear All
+                </p>
             </div>
-            <input
-                ref={amountRef}
-                onFocus={amountFocus}
-                onBlur={amountBlur}
-                type="text"
-                required
-                className="w-[90%] px-2 py-1 outline-none rounded-r-md"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-            />
-            </div>
-            {error.amount && <p className="text-xs mt-1 font-montserrat text-red-400">{error.amount}</p>}
-        </div>
 
-        {/* Mortgage Term and Interest Rate Section */}
-        <div className="flex justify-between space-x-5">
-            <div className="flex flex-col w-[45%] space-y-2">
-            <p className="text-lg font-palanquin text-blue-950">Mortgage Term</p>
-            <div className={`flex flex-row justify-start items-center rounded-md border ${borderMrtTerm}`}>
-                <input
-                ref={mrtRef}
-                onFocus={mrtFocus}
-                onBlur={mrtBlur}
-                type="text"
-                required
-                className="w-[70%] px-2 py-1 outline-none rounded-l-md"
-                value={years}
-                onChange={(e) => setYears(e.target.value)}
-                />
-                <div className={`w-[30%] flex justify-center items-center ${borderMrtTerm} h-full rounded-r-[5px]`}>
-                <p className="text-slate-700 font-palanquin text-md">years</p>
+            {/* Mortgage Amount Section */}
+            <div className="flex flex-col space-y-2">
+                <p className="text-base md:text-lg font-palanquin text-blue-950">Mortgage Amount</p>
+                <div className={`flex flex-row justify-start items-center rounded-md border ${borderMa}`}>
+                    <div className={`w-12 flex justify-center ${borderMa} h-full rounded-l-[5px]`}>
+                        <p className="text-lg font-bold">£</p>
+                    </div>
+                    <input
+                        ref={amountRef}
+                        onFocus={amountFocus}
+                        onBlur={amountBlur}
+                        type="text"
+                        required
+                        className="w-full px-2 py-2 outline-none rounded-r-md"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                    />
+                </div>
+                {error.amount && (
+                    <p className="text-xs mt-1 font-montserrat text-red-400">{error.amount}</p>
+                )}
+            </div>
+
+            {/* Mortgage Term and Interest Rate Section */}
+            <div className="flex flex-col md:flex-row justify-between space-y-5 md:space-y-0 md:space-x-5">
+                <div className="flex flex-col w-full md:w-[45%] space-y-2">
+                    <p className="text-base md:text-lg font-palanquin text-blue-950">Mortgage Term</p>
+                    <div className={`flex flex-row justify-start items-center rounded-md border ${borderMrtTerm}`}>
+                        <input
+                            ref={mrtRef}
+                            onFocus={mrtFocus}
+                            onBlur={mrtBlur}
+                            type="text"
+                            required
+                            className="w-[70%] px-2 py-2 outline-none rounded-l-md"
+                            value={years}
+                            onChange={(e) => setYears(e.target.value)}
+                        />
+                        <div className={`w-[30%] flex justify-center items-center ${borderMrtTerm} h-full rounded-r-[5px]`}>
+                            <p className="text-slate-700 font-palanquin text-sm md:text-md">years</p>
+                        </div>
+                    </div>
+                    {error.years && (
+                        <p className="text-xs mt-1 font-montserrat text-red-400">{error.years}</p>
+                    )}
+                </div>
+
+                <div className="flex flex-col w-full md:w-[45%] space-y-2">
+                    <p className="text-base md:text-lg font-palanquin text-blue-950">Interest Rate</p>
+                    <div className={`flex flex-row justify-start items-center rounded-md border ${borderINterestRte}`}>
+                        <input
+                            ref={intRef}
+                            onFocus={intFocus}
+                            onBlur={intBlur}
+                            type="text"
+                            required
+                            className="w-[80%] px-2 py-2 outline-none rounded-l-md"
+                            value={interest}
+                            onChange={(e) => setInterest(e.target.value)}
+                        />
+                        <div className={`w-[20%] flex justify-center items-center ${borderINterestRte} h-full rounded-r-[5px]`}>
+                            <p className="text-center text-slate-700 font-palanquin text-sm md:text-md">%</p>
+                        </div>
+                    </div>
+                    {error.interest && (
+                        <p className="text-xs mt-1 font-montserrat text-red-400">{error.interest}</p>
+                    )}
                 </div>
             </div>
-            {error.years && <p className="text-xs mt-1 font-montserrat text-red-400">{error.years}</p>}
-            </div>
 
-            <div className="flex flex-col w-[45%] space-y-2">
-            <p className="text-lg font-palanquin text-blue-950">Interest Rate</p>
-            <div className={`flex flex-row justify-start items-center rounded-md border ${borderINterestRte}`}>
-                <input
-                ref={intRef}
-                onFocus={intFocus}
-                onBlur={intBlur}
-                type="text"
-                required
-                className="w-[80%] px-2 py-1 outline-none rounded-l-md"
-                value={interest}
-                onChange={(e) => setInterest(e.target.value)}
-                />
-                <div className={`w-[20%] flex justify-center items-center ${borderINterestRte} h-full rounded-r-[5px]`}>
-                <p className="text-center text-slate-700 font-palanquin text-md">%</p>
+            {/* Mortgage Type Section */}
+            <div className="flex flex-col space-y-2">
+                <p className="text-base md:text-lg font-palanquin text-blue-950">Mortgage Type</p>
+                <div
+                    className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${OptionStylesRepayment} rounded-md`}
+                >
+                    <input
+                        type="radio"
+                        name="option"
+                        value="repayment"
+                        checked={selectedOption === 'repayment'}
+                        onChange={handleChange}
+                        className={`${OptionStylesRepayment} hover:cursor-pointer`}
+                    />
+                    <p className="text-sm font-semibold font-montserrat text-slate-700">Repayment</p>
                 </div>
+                <div
+                    className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${OptionStylesinterestonly} rounded-md`}
+                >
+                    <input
+                        type="radio"
+                        name="option"
+                        value="interest"
+                        checked={selectedOption === 'interest'}
+                        onChange={handleChange}
+                        className={`${OptionStylesinterestonly} hover:cursor-pointer`}
+                    />
+                    <p className="text-sm font-semibold font-montserrat text-slate-700">Interest Only</p>
+                </div>
+                {error.option && (
+                    <p className="text-xs mt-1 font-montserrat text-red-400">{error.option}</p>
+                )}
             </div>
-                {error.interest && <p className="text-xs mt-1 font-montserrat text-red-400">{error.interest}</p>}
-            </div>
-        </div>
 
-        {/* Mortgage Type Section */}
-        <div className="flex flex-col space-y-2">
-            <p className="text-lg font-palanquin text-blue-950">Mortgage Type</p>
-            <div className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${OptionStylesRepayment} rounded-md`}>
-            <input
-                type="radio"
-                name="option"
-                value="repayment"
-                checked={selectedOption === 'repayment'}
-                onChange={handleChange}
-                className={`${OptionStylesRepayment} hover:cursor-pointer`}
-            />
-            <p className="text-sm font-semibold font-montserrat text-slate-700">Repayment</p>
+            {/* Button Section */}
+            <div>
+                <Buttons inputValues={data} onClick={calculateMortgage} />
             </div>
-            <div className={`w-full flex flex-row h-10 justify-start items-center gap-5 p-3 border ${OptionStylesinterestonly} rounded-md`}>
-            <input
-                type="radio"
-                name="option"
-                value="interest"
-                checked={selectedOption === 'interest'}
-                onChange={handleChange}
-                className={`${OptionStylesinterestonly} hover:cursor-pointer`}
-            />
-            <p className="text-sm font-semibold font-montserrat text-slate-700">Interest Only</p>
-            </div>
-                {error.option && <p className="text-xs mt-1 font-montserrat text-red-400">{error.option}</p>}
-        </div>
+        </section>
 
-        {/* Button Section */}
-        <div>
-            <Buttons inputValues={data} onClick={calculateMortgage}/>
-        </div>
-    </section>
   )
 }
 
