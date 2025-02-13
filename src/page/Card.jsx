@@ -7,22 +7,22 @@ const Card = () => {
       const [result, setResult] = useState(null);
 
   return (
-        <section className="mx-auto lg:max-w-screen-lg bg-white rounded-3xl h-[60%] max-lg:h-full">
-        <div className="flex max-lg:flex-col h-full">
-            {/* left container */}
-            <div className="p-9 bg-white rounded-l-3xl max-w-full">
-                
-                <div>
-                    <MortgageInput setResult={setResult}/>
-                </div>
+        <section className="mx-auto max-w-full xs:max-w-xs sm:max-w-xs md:max-w-[500px] lg:max-w-screen-lg bg-white rounded-none lg:rounded-3xl lg:h-auto md:h-full">
+        <div className="flex flex-col lg:flex-row h-full">
+            {/* Left Container */}
+            <div className="flex-1 p-10 bg-white rounded-t-3xl lg:rounded-l-3xl lg:rounded-tr-none">
+            <div>
+                <MortgageInput setResult={setResult} />
+            </div>
             </div>
 
             {/* Right Container */}
-            <div className="flex-1 h-full">
-                {result ? <FrontResult output={result} /> :<Result />}
+            <div className="flex-1 p-10 rounded-none lg:rounded-r-3xl lg:rounded-bl-[80px] bg-teal-900">
+            {result ? <FrontResult output={result} /> : <Result />}
             </div>
         </div>
-    </section>
+        </section>
+
   );
 };
 
